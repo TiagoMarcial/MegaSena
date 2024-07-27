@@ -6,10 +6,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import org.w3c.dom.Text
+import kotlin.random.Random
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +31,16 @@ class MainActivity : AppCompatActivity() {
         val txtResult: TextView = findViewById(R.id.text_result)
         val btnGen: Button = findViewById(R.id.btn_generate)
 
+
         // Opção 2: btnGen.setOnClickListener(buttonClickListener)
         //Escutar as inteções
         //Opção 1: XML (fun buttonClicked, colocar onClick no xml)
         //Opção 2: Variável do tipo objeto Anonimo View.OnclickListener (interface)
         //Opção 3: mais simples e recomendavel: declarar o bloco que será disparado pelo one click
-        btnGen.setOnClickListener { Log.i("teste", "botão clicado!") } // opção 3
+        btnGen.setOnClickListener {
+            val text = editTxt.text.toString()
+            numberGenerator(text, txtResult)
+        } // opção 3
 
     }
     //Opção2
@@ -40,7 +48,34 @@ class MainActivity : AppCompatActivity() {
         //quem chama o onClick é o SDK que dispara o método apos o evento touch
             Log.i("teste", "botão clicado!")
         }*/
+        private fun numberGenerator(text: String, txtResult: TextView){
+            //Validar quando o campo é vazio e entre os numeros solicitados
 
+            if (text.isNotEmpty()) {
+                val qtd = text.toInt()
+                if(qtd in 6..15) {
+                    val random = Random.Default
+                    val numbers = mutableSetOf<Int>()
+                    while (true) {
+                        val number = random.nextInt(1, 60)
+                        numbers.add(number)
+                        txtResult.setText(numbers.joinToString(" - "))
+                        if (numbers.size == qtd) {
+                            break
+                        }
+                    }
+
+                    for (x in numbers) {
+                        Log.i("teste", "numero $x")
+                    }
+                } else {
+                    Toast.makeText(this, "Informe um número entre 6 e 15", Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                Toast.makeText(this, "Informe um número entre 6 e 15", Toast.LENGTH_SHORT).show()
+            }
+        }
     /*fun buttonClicked(view: View) {
     Log.i("teste", "botão clicado!")
     }*/
