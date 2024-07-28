@@ -1,5 +1,7 @@
 package com.example.megasena
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,8 +16,9 @@ import androidx.core.view.WindowInsetsCompat
 import org.w3c.dom.Text
 import kotlin.random.Random
 
-
 class MainActivity : AppCompatActivity() {
+    private lateinit var prefs: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,10 +30,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         //aqui busca e da a referência aos objetos
+
         val editTxt: EditText = findViewById(R.id.edit_number)
         val txtResult: TextView = findViewById(R.id.text_result)
         val btnGen: Button = findViewById(R.id.btn_generate)
-
+        // Database
+        prefs = getSharedPreferences("db", Context.MODE_PRIVATE)
+        val result = prefs.getString("result", null)
+        if (result !=null) {
+            txtResult.text = "Ultima aposta: $result"
+        }
 
         // Opção 2: btnGen.setOnClickListener(buttonClickListener)
         //Escutar as inteções
@@ -40,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         btnGen.setOnClickListener {
             val text = editTxt.text.toString()
             numberGenerator(text, txtResult)
+
         } // opção 3
 
     }
@@ -60,6 +70,10 @@ class MainActivity : AppCompatActivity() {
                         val number = random.nextInt(1, 60)
                         numbers.add(number)
                         txtResult.setText(numbers.joinToString(" - "))
+                        val editor = prefs.edit()
+                        editor.putString("result", txtResult.text.toString())
+                        val saved = editor.commit()
+                        Log.i("teste2", "foi salvo: $saved")
                         if (numbers.size == qtd) {
                             break
                         }
