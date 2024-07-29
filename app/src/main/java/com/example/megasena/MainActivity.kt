@@ -18,52 +18,39 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //Daqui começa a se fazer o app
+
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        //aqui busca e da a referência aos objetos
 
         val editTxt: EditText = findViewById(R.id.edit_number)
         val txtResult: TextView = findViewById(R.id.text_result)
         val btnGen: Button = findViewById(R.id.btn_generate)
-        // Database
+
         prefs = getSharedPreferences("db", Context.MODE_PRIVATE)
         val result = prefs.getString("result", "Nenhum registro salvo!")
         if (result !=null) {
             txtResult.text = "Ultima aposta: $result"
         }
 
-        // Opção 2: btnGen.setOnClickListener(buttonClickListener)
-        //Escutar as inteções
-        //Opção 1: XML (fun buttonClicked, colocar onClick no xml)
-        //Opção 2: Variável do tipo objeto Anonimo View.OnclickListener (interface)
-        //Opção 3: mais simples e recomendavel: declarar o bloco que será disparado pelo one click
         btnGen.setOnClickListener {
             val text = editTxt.text.toString()
             numberGenerator(text, txtResult)
 
-        } // opção 3
-
+        }
     }
-    //Opção2
-    /*val buttonClickListener = View.OnClickListener {
-        //quem chama o onClick é o SDK que dispara o método apos o evento touch
-            Log.i("teste", "botão clicado!")
-        }*/
+
         private fun numberGenerator(text: String, txtResult: TextView){
-            //Validar quando o campo é vazio e entre os numeros solicitados
 
             if (text.isNotEmpty()) {
                 val qtd = text.toInt()
-                if(qtd in 6..15) {
+                if(qtd in 6..15 || qtd == 22) {
                     val random = Random.Default
                     val numbers = mutableSetOf<Int>()
                     while (true) {
@@ -90,7 +77,5 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Informe um número entre 6 e 15", Toast.LENGTH_SHORT).show()
             }
         }
-    /*fun buttonClicked(view: View) {
-    Log.i("teste", "botão clicado!")
-    }*/
+
 }
