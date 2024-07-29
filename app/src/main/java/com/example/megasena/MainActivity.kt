@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         val btnGen: Button = findViewById(R.id.btn_generate)
         // Database
         prefs = getSharedPreferences("db", Context.MODE_PRIVATE)
-        val result = prefs.getString("result", null)
+        val result = prefs.getString("result", "Nenhum registro salvo!")
         if (result !=null) {
             txtResult.text = "Ultima aposta: $result"
         }
